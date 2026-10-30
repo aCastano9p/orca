@@ -90,6 +90,8 @@ export type PtySpawnCommitInput = {
     worktreeId: string | null | undefined
     shellOverride: string | undefined
     rendererLaunchAuthority: { launchToken: string; launchAgent: TuiAgent } | null
+    /** The agent a fresh spawn's launch command starts; null for reattaches, adoptions and shells. */
+    launchedAgent: TuiAgent | null
   }
   preAllocatedHandle: string | null | undefined
   spawnTiming?: PtySpawnTiming
@@ -157,6 +159,7 @@ export async function commitPtySpawn(input: PtySpawnCommitInput): Promise<PtySpa
             ...(registration.rendererLaunchAuthority
               ? { agentLaunchAuthority: registration.rendererLaunchAuthority }
               : {}),
+            ...(registration.launchedAgent ? { launchedAgent: registration.launchedAgent } : {}),
             ...(providerReattachLaunchIdentity ? { providerReattachLaunchIdentity } : {})
           }
         : undefined,
